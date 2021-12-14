@@ -1,0 +1,73 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}BlogBK{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="/static/favicon.png" type="image/png">
+<link rel="icon" href="/static/favicon.png" type="image/png">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation" style="background: -webkit-linear-gradient(left, #33ccff 0%, #ff99cc 100%);
+ border:none; font-family:Comic Sans;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('main.index') }}" ><img
+                        src="https://www.apmedia.vn/wp-content/uploads/2018/02/Home-Icon.png" width="24px" style="size:2rem;" alt=""></a></li>
+                {% if current_user.is_authenticated %}
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if current_user.can(Permission.MODERATE_COMMENTS) %}
+                <li><a style="color: #FFFFFF;" href="{{ url_for('main.moderate') }}">Moderate Comments</a></li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <li class="dropdown">
+                    
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#FFFFFF; font-weight:700; font-size:1.5em;" >
+                        <img src="{{ current_user.gravatar(size=22 )}}">
+                        {{ current_user.username }} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('main.user', username=current_user.username) }}" style="font-size:1.3em;" >Profile</a></li>
+                        <li><a href="{{ url_for('auth.change_password') }}" style="font-size:1.3em;">Change Password</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}" style="font-size:1.3em;">Sign Out</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}" style="color:#FFFFFF;font-weight:700; font-size:2rem;">Sign In</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class = "container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% block page_content %}{% endblock %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{% endblock %}

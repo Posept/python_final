@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}BlogBK{% endblock %}
+
+{% block page_content %}
+
+<div style="border:0.5px solid #E6E6FA; border-radius:0.6%; background:#E6E6FA; border-width:10px ">
+    <h1 style="margin-left:10px">Hi, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guy{% endif %}!</h1>
+    {% if current_user.can(Permission.WRITE_ARTICLES) %}
+    <div style="margin-left:10px" >
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    {% endif %}
+</div>
+<div class="post-tabs">
+   <ul class="nav nav-tabs">
+       <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">All</a></li>
+       {% if current_user.is_authenticated %}
+       <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">Followers</a></li>
+       {% endif %}
+   </ul>
+   {% include '_posts.html' %}
+</div>
+{% if pagination %}
+<div class="pagination">
+  {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

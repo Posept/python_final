@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}{{ user.username }} | BlogBK{% endblock %}
+
+{% block page_content %}
+<div  style="color: #FFFFFF;background:#33ccff; border:1px solid #E6E6FA; border-radius:2%; width:430px;  margin-left:-35px; display:inline-block; position:absolute; ">
+    <div class="">
+        <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=150) }}" style="border-radius: 50%; margin:35px 20px 10px;  ">
+    </div>
+
+<div style="margin:20px 20px 10px;">
+  <div class="profile-header"  >
+     <h3 style=" margin-top:40px; margin-left: 180px ">{{ user.username }}</h3>
+     {% if user.name or user.location %}
+     {% endif %}
+
+     {% if current_user.is_administrator() %}
+     <p style="margin-left: 180px "><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+     {% endif %}
+
+     <p style="margin-left: 180px">
+
+        <a href="{{ url_for('.followers', username=user.username) }}">Followers: <span class="badge">{{ user.followers.count() - 1}}</span></a>
+        <a href="{{ url_for('.followed_by', username=user.username) }}">Following: <span class="badge">{{ user.followed.count() - 1}}</span></a>
+        {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
+        | <span class="label label-default">Follows you</span>
+        {% endif %}
+      </p>
+     <p style="margin-left: 180px">
+         {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+            {% if not current_user.is_following(user) %}
+            <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">Follow</a>
+            {% else %}
+            <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default">Unfollow</a>
+            {% endif %}
+        {% endif %}
+       {% if user == current_user %}
+       <a class="btn btn-default" href="{{ url_for('.edit_profile')}}">Edit Profile</a>
+       {% endif %}
+       {% if current_user.is_administrator() %}
+       <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id)}}">Edit Profile [Admin]</a>
+       {% endif %}
+     </p>
+   </div>
+</div>
+    <div style="margin-top:60px; font-size:1.5em; margin-left:30px">
+        <p> Full name:
+         {% if user.name %}{{ user.name }}{% endif %}
+        </p>
+        <p>
+         {% if user.location %}
+         Location: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+         {% endif %}
+        </p>
+        {% if user.about_me %}<p>About me: {{ user.about_me }}</p>{% endif %}
+        <p>Member since {{ moment(user.member_since).format('L') }}.</p>
+        <p>Last seen {{ moment(user.last_seen).fromNow() }}.</p>
+        <p>{{ user.posts.count() }} blog posts.  {{ user.comments.count() }} comments.</p>
+    </div>
+</div>
+<div style=" position:absolute; left:650px; border:2px solid #E6E6FA; border-radius:1%; display:inline-block; width:770px; height:440;" >
+<h3 style="font-weight:bold; color:	#00CED1;">Blog posts by {{ user.username }}</h3>
+{% include '_posts.html' %}
+{% if pagination %}
+<div class="pagination">
+  {{ macros.pagination_widget(pagination, '.index')}}
+</div>
+{% endif %}
+{% endblock %}
+</div>
