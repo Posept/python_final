@@ -61,7 +61,7 @@ def edit_profile():
         current_user.name = form.name.data
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
-        db.session.query.update(current_user)
+        db.session.add(current_user)
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.username))
     form.name.data = current_user.name
@@ -83,7 +83,7 @@ def edit_profile_admin(id):
         user.name = form.name.data
         user.location = form.location.data
         user.about_me = form.about_me.data
-        db.session.query.update(user)
+        db.session.add(user)
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.username))
     form.email.data = user.email
