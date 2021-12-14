@@ -27,7 +27,7 @@
         | <span class="label label-default">Follows you</span>
         {% endif %}
       </p>
-     <p style="margin-left10100px">
+     <p>
          {% if current_user.can(Permission.FOLLOW) and user != current_user %}
             {% if not current_user.is_following(user) %}
             <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">Follow</a>
@@ -60,7 +60,7 @@
         <p>{{ user.posts.count() }} blog posts.  {{ user.comments.count() }} comments.</p>
     </div>
 </div>
-<div style=" position:absolute; left:800px; border:2px solid #E6E6FA; border-radius:1%; display:inline-block; width:770px; height:440;" >
+<div style=" position:absolute; left:830px; border:2px solid #E6E6FA; border-radius:1%; display:inline-block; width:770px; height:440;" >
 <h3 style="font-weight:bold; color:	#00CED1;">Blog posts by {{ user.username }}</h3>
 {% include '_posts.html' %}
 {% if pagination %}
