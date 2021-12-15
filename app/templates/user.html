@@ -60,7 +60,7 @@
         <p>{{ user.posts.count() }} blog posts.  {{ user.comments.count() }} comments.</p>
     </div>
 </div>
-<div style=" position:absolute; left:830px; border:2px solid #E6E6FA; border-radius:1%; display:inline-block; width:770px; height:440; margin:20px 20px 10px;" >
+<div style=" left:830px; border:2px solid #E6E6FA; border-radius:1%; display:inline-block; width:770px; height:440;margin:20px 20px 10px;" >
 <h3 style="font-weight:bold; color:	#00CED1;"> Blog posts by {{ user.username }}</h3>
 {% include '_posts.html' %}
 {% if pagination %}
